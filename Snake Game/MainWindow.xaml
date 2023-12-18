@@ -19,6 +19,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
 
             <TextBlock x:Name="ScoreText"
@@ -27,6 +28,14 @@
                Text="SCORE 0"
                FontSize="22"
                Margin="10"/>
+
+            <TextBlock x:Name="HighScoreText"
+             HorizontalAlignment="Center"
+             VerticalAlignment="Center"
+             Text="High SCORE 0"
+             FontSize="22"
+             Margin="10"
+             Grid.Row="2"/>
 
             <Border x:Name="GridBorder"
             Grid.Row="1"
@@ -48,7 +57,7 @@
 
             <Border x:Name="Overlay"
                     Grid.Row="1"
-                    Background="{StaticResource OverlayColor}"
+                    Background="{DynamicResource GridBackgroundColor}"
                     Width="{Binding Path=ActualWidth, ElementName=GridBorder}"
                     Height="{Binding Path=ActualHeight, ElementName=GridBorder}"
                     Margin="{Binding Path=Margin, ElementName=GridBorder}"

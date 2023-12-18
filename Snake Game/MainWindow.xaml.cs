@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace Snake_Game
 {
@@ -35,10 +37,11 @@ namespace Snake_Game
             {Direction.Left, 270 }
         };
 
-        private readonly int rows = 35, cols = 35;
+        private readonly int rows = 23, cols = 23;
         private readonly Image[,] gridImages;
         private GameState gameState;
         private bool gameRunning;
+        private int highScore = 0;
 
 
         public MainWindow()
@@ -46,10 +49,25 @@ namespace Snake_Game
             InitializeComponent();
             gridImages = SetupGrid();
             gameState = new GameState(rows, cols);
+            string fileName = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "highscore.txt");
+            if (File.Exists(fileName))
+            {
+                StreamReader sr = new StreamReader(fileName);
+                highScore = int.Parse(sr.ReadLine());
+                sr.Close();
+                HighScoreText.Text = $"High Score: {highScore}";
+            }
+            else
+            {
+                StreamWriter sw = new StreamWriter(fileName);
+                sw.WriteLine(highScore);
+                sw.Close();
+            }
         }
 
         private async Task RunGame()
         {
+            Audio.BackSound.Play();
             Draw();
             await ShowCountDown();
             Overlay.Visibility = Visibility.Hidden;
@@ -165,6 +183,7 @@ namespace Snake_Game
 
         private async Task DrawDeadSnake()
         {
+           Audio.BackSound.Stop();
             List<Position> positions = new List<Position>(gameState.SnakePositions());
 
             for (int i = 0; i < positions.Count; i++)
@@ -187,6 +206,19 @@ namespace Snake_Game
 
         private async Task ShowGameOver()
         {
+
+            Audio.GameOver.Play();
+
+            if (gameState.Score > highScore)
+            {
+                Audio.HighScore.Play();
+                highScore = gameState.Score;
+                StreamWriter sw = new StreamWriter(Directory.GetCurrentDirectory() + "\\highscore.txt");
+                sw.WriteLine(highScore);
+                sw.Close();
+            }
+            HighScoreText.Text = $"High Score: {highScore}";
+
             await DrawDeadSnake();
             await Task.Delay(1000);
             Overlay.Visibility = Visibility.Visible;
