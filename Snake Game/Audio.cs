@@ -7,7 +7,7 @@ namespace Snake_Game
     {
         public readonly static MediaPlayer GameOver = LoadAudio("pacman_death.mp3");
         public readonly static MediaPlayer HighScore = LoadAudio("epicsaxguy.mp3");
-        public readonly static MediaPlayer BackSound = LoadAudio("beutiful-memories-sweet-melancholic-music-178463.mp3");
+        public readonly static MediaPlayer BackSound = LoadAudio("beautiful-memories-sweet-melancholic-music-178463.mp3", 1, true );
 
 
         private static MediaPlayer LoadAudio(string filename, double volume=1, bool repeat = false, bool autoReset = true)

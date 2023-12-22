@@ -29,6 +29,7 @@ namespace Snake_Game
 
             AddSnake();
             AddFood();
+            AddWall();
         }
 
         private void AddSnake()
@@ -69,6 +70,28 @@ namespace Snake_Game
 
             Position pos = empty[random.Next(empty.Count)];
             Grid[pos.Row, pos.Col] = GridValue.Food;
+        }
+
+        private void AddWall()
+        {
+            List<Position> empty =
+                new List<Position>(EmptyPositions());
+
+            if (empty.Count == 0)
+                return;
+            int numberOfWalls = (int)(Rows * Cols * GameSettings.WallDensity);
+
+            for (int c = 0; c < numberOfWalls; c++)
+            {
+                if (empty.Count == 0)
+                    return;
+
+                int posNumber = random.Next(0, empty.Count);
+
+                Position pos = empty[posNumber];
+                Grid[pos.Row, pos.Col] = GridValue.Wall;
+                empty.RemoveAt(posNumber);
+            }
         }
 
         public Position HeadPosition()
@@ -160,7 +183,7 @@ namespace Snake_Game
             Position newHeadPos = HeadPosition().Translate(Dir);
             GridValue hit = WillHit(newHeadPos);
 
-            if (hit == GridValue.Outside || hit == GridValue.Snake)
+            if (hit == GridValue.Outside || hit == GridValue.Snake || (hit == GridValue.Wall && GameSettings.WallFatality))
             {
                 GameOver = true;
             }
@@ -171,6 +194,9 @@ namespace Snake_Game
             }
             else if ( hit == GridValue.Food)
             {
+                
+                
+                
                 AddHead(newHeadPos);
                 Score++;
                 AddFood();

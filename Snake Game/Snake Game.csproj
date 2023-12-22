@@ -20,6 +20,7 @@
     <None Remove="Assets\Head.png" />
     <None Remove="Assets\icon.ico" />
     <None Remove="Assets\pacman_death.mp3" />
+    <None Remove="Assets\Wall.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -43,6 +44,7 @@
     <Resource Include="Assets\Food.png" />
     <Resource Include="Assets\Head.png" />
     <Resource Include="Assets\icon.ico" />
+    <Resource Include="Assets\Wall.png" />
   </ItemGroup>
 
 </Project>

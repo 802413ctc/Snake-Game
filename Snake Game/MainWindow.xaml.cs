@@ -27,6 +27,7 @@ namespace Snake_Game
             {GridValue.Empty, Images.Empty },
             {GridValue.Snake, Images.Body },
             {GridValue.Food, Images.Food },
+            {GridValue.Wall, Images.Wall },
         };
 
         private readonly Dictionary<Direction, int> dirToRotation = new()
@@ -42,6 +43,7 @@ namespace Snake_Game
         private GameState gameState;
         private bool gameRunning;
         private int highScore = 0;
+        private int boostSpeed = 0;
 
 
         public MainWindow()
@@ -112,6 +114,16 @@ namespace Snake_Game
                 case Key.Down:
                     gameState.ChangeDirection(Direction.Down);
                     break;
+                case Key.Space:
+                    if (boostSpeed == 0)
+                    {
+                        boostSpeed = GameSettings.BoostSpeed;
+                    }
+                    else
+                    {
+                        boostSpeed = 0;
+                    }
+                    break;
 
             }
         }
@@ -120,9 +132,10 @@ namespace Snake_Game
         {
             while (!gameState.GameOver)
             {
-                await Task.Delay(100);
+                await Task.Delay(100-boostSpeed);
                 gameState.Move();
                 Draw();
+                
             }
         }
 
@@ -155,6 +168,7 @@ namespace Snake_Game
             DrawGrid();
             DrawSnakeHead();
             ScoreText.Text = $"SCORE {gameState.Score}";
+            
         }
 
         private void DrawGrid()
@@ -212,6 +226,7 @@ namespace Snake_Game
             if (gameState.Score > highScore)
             {
                 Audio.HighScore.Play();
+
                 highScore = gameState.Score;
                 StreamWriter sw = new StreamWriter(Directory.GetCurrentDirectory() + "\\highscore.txt");
                 sw.WriteLine(highScore);
